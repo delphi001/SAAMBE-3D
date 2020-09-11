@@ -163,7 +163,7 @@ def mutation_hbonds(wild,mutation):
    return 15
 def mutation_chemical(wild,mutation):
  if wild in ('A','G','I','L','P','V'):
-  if mutation in ('C','R','H','K'):
+  if mutation in ('R','H','K'):
    return 0   
   if mutation in ('N','Q'):
    return 1   
@@ -177,8 +177,8 @@ def mutation_chemical(wild,mutation):
    return 5   
   if mutation in ('A','G','I','L','P','V'):
    return 6
- if wild in ('C','R','H','K'):
-  if mutation in ('C','R','H','K'):
+ if wild in ('R','H','K'):
+  if mutation in ('R','H','K'):
    return 7   
   if mutation in ('N','Q'):
    return 8   
@@ -193,7 +193,7 @@ def mutation_chemical(wild,mutation):
   if mutation in ('A','G','I','L','P','V'):
    return 13
  if wild in ('N','Q'):
-  if mutation in ('C','R','H','K'):
+  if mutation in ('R','H','K'):
    return 14   
   if mutation in ('N','Q'):
    return 15   
@@ -208,7 +208,7 @@ def mutation_chemical(wild,mutation):
   if mutation in ('A','G','I','L','P','V'):
    return 20
  if wild in ('D','E'):
-  if mutation in ('C','R','H','K'):
+  if mutation in ('R','H','K'):
    return 21   
   if mutation in ('N','Q'):
    return 22   
@@ -223,7 +223,7 @@ def mutation_chemical(wild,mutation):
   if mutation in ('A','G','I','L','P','V'):
    return 27   
  if wild in ('C','M'):
-  if mutation in ('C','R','H','K'):
+  if mutation in ('R','H','K'):
    return 28   
   if mutation in ('N','Q'):
    return 29   
@@ -238,7 +238,7 @@ def mutation_chemical(wild,mutation):
   if mutation in ('A','G','I','L','P','V'):
    return 34      
  if wild in ('S','T'):
-  if mutation in ('C','R','H','K'):
+  if mutation in ('R','H','K'):
    return 35   
   if mutation in ('N','Q'):
    return 36   
@@ -253,7 +253,7 @@ def mutation_chemical(wild,mutation):
   if mutation in ('A','G','I','L','P','V'):
    return 41   
  if wild in ('F','W','Y'):
-  if mutation in ('C','R','H','K'):
+  if mutation in ('R','H','K'):
    return 42   
   if mutation in ('N','Q'):
    return 43   
