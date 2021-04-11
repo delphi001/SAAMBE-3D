@@ -299,22 +299,27 @@ def mutation_type(wild,mutation):
 #def mutation_pdb(pdbid):
 # null_value=os.system('wget \'https://files.rcsb.org/view/'+pdbid+'.pdb\' -O pdb'+pdbid+'.ent -q')
 def mutation_pdb(pdbid):
- import urllib
+ import urllib.request, urllib.parse, urllib.error
  url="https://files.rcsb.org/view/"+pdbid+".pdb"
- urllib.urlretrieve(url, pdbid)
-def mutation_sequence(pdbid,resid,chain):
+ urllib.request.urlretrieve(url, pdbid)
+def mutation_sequence(pdbid,resid,chain,wild):
  label_index=1
  resid_label=[]
  resid_label_aa=[]
  mutation_coordinate=[]
  resid_label_aa=[0 for _ in range(11)] #how many sequence to use
  for i in range(len(resid_label_aa)):
-  resid_int=filter(lambda ch: ch in '-0123456789', resid.strip())
-  resid_label.append(int(resid_int)-(len(resid_label_aa)-1)/2+i)
+  resid_int=[ch for ch in resid.strip() if ch in '0123456789.']
+  resid_int=''.join(list(resid_int))
+  resid_label.append(int(int(resid_int)-(len(resid_label_aa)-1)/2+i))
   for line in open(pdbid):
    pdbstr=line.strip()
    if pdbstr[0:4]=="ATOM":
     if pdbstr[21:22]==chain:
+     if pdbstr[22:27].strip()==str(resid):
+      if translate_aa(pdbstr[17:20].strip())!=wild:
+       print("Wild type amino acid does not match the structure.")
+       sys.exit()
      if pdbstr[22:27].strip()==str(resid_label[i]) or (pdbstr[22:27].strip()==str(resid) and label_index==1):
       if pdbstr[13:15]=="CA":
        if pdbstr[22:27].strip()==str(resid):
@@ -339,7 +344,7 @@ def mutation_distance(pdbid,chain,mutation_coordinate):
       mutation_coordinate1=[float(pdbstr[29:38].strip()),float(pdbstr[38:46].strip()),float(pdbstr[46:55].strip())]
       resid_label_aa.append(pdbstr[17:20])
       resid_label_distance.append(np.sqrt(np.square(mutation_coordinate[0]-mutation_coordinate1[0])+np.square(mutation_coordinate[1]-mutation_coordinate1[1])+np.square(mutation_coordinate[2]-mutation_coordinate1[2])))      
- b=zip(resid_label_distance,range(len(resid_label_distance)))
+ b=list(zip(resid_label_distance,list(range(len(resid_label_distance)))))
  b.sort(key = lambda x : x[0])
  c = [x[1] for x in b]
  sequ_num=10 #10 sequence in total,use last 7sequence
@@ -381,9 +386,9 @@ def mutation_pdb_information(pdbid):
    except ValueError:
     temp=0
   if pdbstr[0:14]=="REMARK 200  PH":
-   ph=filter(lambda ch: ch in '0123456789.', pdbstr[45:48].strip())
+   ph=[ch for ch in pdbstr[45:48].strip() if ch in '0123456789.']
    try:
-    ph=float(ph)
+    ph=float(''.join(list(ph)))
    except ValueError:
     ph=0
    break
@@ -394,6 +399,10 @@ def file_loop(pdb_id,mutation_chain,mutation_resid,wild_aa,mutation_aa,model_typ
   wild_aa=translate_aa(wild_aa)
  if len(mutation_aa) == 3:
   mutation_aa=translate_aa(mutation_aa)
+ aa_list=['A','F','C','D','N','E','Q','G','H','L','I','K','M','P','R','S','T','V','W','Y']
+ if wild_aa not in aa_list or mutation_aa not in aa_list:
+  print("Please input the 20 type amino acids")
+  sys.exit()
  label = []
  label.append(net_volume(wild_aa,mutation_aa))
  label.append(net_hydrophobicity(wild_aa,mutation_aa))
@@ -409,7 +418,7 @@ def file_loop(pdb_id,mutation_chain,mutation_resid,wild_aa,mutation_aa,model_typ
   #mutation_pdb(pdb_id)
   #pdb_id="pdb"+pdb_id+".ent"
   return('Please check the PDB file')
- (resid_label_aa,mutation_coordinate,error_index)=mutation_sequence(pdb_id,str(mutation_resid),mutation_chain)
+ (resid_label_aa,mutation_coordinate,error_index)=mutation_sequence(pdb_id,str(mutation_resid),mutation_chain,wild_aa)
  if error_index == 1:
   return('Please check the PDB file, there is no coordinate at the mutation site')
  label_aa_distance=mutation_distance(pdb_id,mutation_chain,mutation_coordinate)
@@ -423,6 +432,12 @@ def file_loop(pdb_id,mutation_chain,mutation_resid,wild_aa,mutation_aa,model_typ
  label.append(ph)
  #if delete_index ==1:
   #os.remove(pdb_id)
+ if str(model_type) == '1':
+  if wild_aa == mutation_aa:
+   return ("0 Neutral")
+ else:
+  if wild_aa == mutation_aa:
+   return('Neutral')
  return(pred_feature(label,model_type))
 def pred_feature(label,model_type):
  if str(model_type) == '1':
@@ -448,7 +463,7 @@ def pred_feature(label,model_type):
  #return (y_pred[0])
 def output_format(model):
  if str(model)=="1":
-  return("Structure_file Chain Position Wild Mutant ddG(kcal/mol) Type")
+  return("Structure_file Chain Position Wild Mutant ddG Type")
  else:
   return("Structure_file Chain Position Wild Mutant Type")
 import sys, getopt
@@ -485,11 +500,11 @@ except NameError:
   output_name
  except NameError:
   pred=file_loop(pdb_id,mutation_chain,mutation_resid,wild_aa,mutation_aa,model_type)
-  print pred
+  print(pred)
  else:
   f = open(output_name, 'w')
   pred=file_loop(pdb_id,mutation_chain,mutation_resid,wild_aa,mutation_aa,model_type)
-  print >>f,pred
+  print(pred, file=f)
   f.close()
 else:
  try:
@@ -498,14 +513,14 @@ else:
   for line in open(file_name):
    info=line.strip().split(' ')
    pred=file_loop(pdb_id,info[0],info[1],str(info[2]),info[3],model_type)
-   print pred
+   print(pred)
   sys.exit()
  else:
   f = open(output_name, 'w')
-  print >>f,output_format(model_type)
+  print(output_format(model_type), file=f)
   for line in open(file_name):
    info=line.strip().split(' ')
    pred=file_loop(pdb_id,info[0],info[1],str(info[2]),info[3],model_type)
-   print >>f,pdb_id,info[0],info[1],str(info[2]),info[3],pred
+   print(pdb_id,info[0],info[1],str(info[2]),info[3],pred, file=f)
   f.close()
 #pred=file_loop(pdb_id,mutation_chain,mutation_resid,wild_aa,mutation_aa)
