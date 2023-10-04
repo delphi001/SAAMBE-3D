@@ -54,3 +54,6 @@ OR
 python saambe-3d.py -i 1A22.pdb -f mutations_list.txt -d 0
 ```
 The 'mutations_list.txt' will be exactly same.
+
+# Citation
+Pahari, S., Li, G., Murthy, A. K., Liang, S., Fragoza, R., Yu, H., & Alexov, E. (2020). SAAMBE-3D: predicting effect of mutations on protein–protein interactions. *International journal of molecular sciences, 21(7)*, 2563.
