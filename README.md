@@ -15,7 +15,7 @@ It has been tested to work on a machine running Ubunutu 22.04.3. The python is m
 ```sh
 conda create -n py311_saambe3d python=3.11
 ```
-Then if any any conda environment is already active deactivate it using:
+Then if any conda environment is already active deactivate it using:
 ```sh
 conda deactivate
 ```
