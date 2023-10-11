@@ -10,6 +10,7 @@ SAAMBE-3D requires following packages and mentioned versions to be installed in 
 - numpy (1.26.0)
 - prody (2.4.0)
 - xgboost (1.7.6)
+  
 It has been tested to work on a machine running Ubunutu 22.04.3. The python is mainted using conda 23.7.2. We created a python environment for SAAMBE-3D using:
 ```sh
 conda create -n py311_saambe3d python=3.11
