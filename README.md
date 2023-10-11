@@ -6,10 +6,28 @@ SAAMBE-3D is a tool written in python 3, it is tested to work with python3.7. SA
 - ii) predict whether a particular mutation is disruptive or non-disruptive.
 
 # Dependepcies
-SAAMBE-3D requires following packages and mentioned versions to be installed in the python to work
-- numpy (1.21.5)
+SAAMBE-3D requires following packages and mentioned versions to be installed in the python (Python 3.11.5) to work
+- numpy (1.26.0)
 - prody (2.4.0)
-- xgboost (1.0.2)
+- xgboost (1.7.6)
+It has been tested to work on a machine running Ubunutu 22.04.3. The python is mainted using conda 23.7.2. We created a python environment for SAAMBE-3D using:
+```sh
+conda create -n py311_saambe3d python=3.11
+```
+Then if any any conda environment is already active deactivate it using:
+```sh
+conda deactivate
+```
+Activate the conda python environemnt created above using:
+```sh
+conda activate py311_saambe3d
+```
+All the above versions of packages are installed using following commands.
+```sh
+conda install -c conda-forge numpy=1.26.0
+conda install -c conda-forge prody=2.4.0
+conda install -c conda-forge numpy=1.7.6
+```
 
 # Prediction Models
 The method provides two different models for predictions:
@@ -17,6 +35,10 @@ The method provides two different models for predictions:
 - classification.model (for prediction: if the mutation is disruptive or non-disruptive)
 
 # How to run
+To have a look at and familiarize yourself with all the options supported use:
+```sh
+python saambe-3d.py --help
+```
 The SAAMBE-3D can be run for a single point mutation by executing following command from inside of the SAAMBE-3D directory:
 ```sh
 python saambe-3d.py -i PDBfile -c Chain -r Resid -w wild -m mutation -d model 
@@ -33,6 +55,8 @@ For example if user want to predict binding free energy for protein-protein comp
 ```sh
 python saambe-3d.py -i 1A22.pdb -c A -r 182 -w C -m A -d 1
 ```
+After running it check the file *`output.out`* or the file name if you provided any with ```sammbe-3d.py -o option``` for the output.
+
 #### List of point-mutations. 
 If user want to get multiple predictions for many single mutations at the same complex, user can provide a file
 say `mutations_list.txt`, which should be formatted as follows for the above example.
@@ -44,15 +68,20 @@ and the command will be:
 ```sh
 python saambe-3d.py -i 1A22.pdb -f mutations_list.txt -d 1
 ```
+After running it check the file *`output.out`* or the file name if you provided any with ```sammbe-3d.py -o option``` for the output.
+
 #
 Similarly. for predicting disruptive/non-disruptive mutation, user can type the same command, just need to change the model from 1 to 0
 ```sh
 python saambe-3d.py -i 1A22.pdb -c A -r 182 -w C -m A -d 0 
 ```
+After running it check the file *`output.out`* or the file name if you provided any with ```sammbe-3d.py -o option``` for the output.
+
 OR
 ```sh
 python saambe-3d.py -i 1A22.pdb -f mutations_list.txt -d 0
 ```
+After running it check the file *`output.out`* or the file name if you provided any with ```sammbe-3d.py -o option``` for the output.
 The 'mutations_list.txt' will be exactly same.
 
 # Citation
