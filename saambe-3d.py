@@ -15,6 +15,12 @@ from utils.protseqfeature import *
 __version__ = "1.0"
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+# Let's suppress the log messages from ProDy, to keep stdout clear.
+pdy.confProDy(verbosity='none')
+# Let's suppress non-critical XGBoost warnings arising because model is developed 
+# using an older verion 0.87.
+xgb.set_config(verbosity=0)
+
 
 def mutation_pdb(pdbid):
     import urllib.request, urllib.parse, urllib.error
@@ -323,7 +329,7 @@ def pred_feature(label, model_type):
     else:
         model = xgb.Booster(model_file=f"{__location__}/classification_v01.model")
         # model.save_model(f"{__location__}/classification_v01.model")
-    x = np.array(label)
+    x = np.array(label, dtype=object)
     x = x.reshape((1, len(label)))
     x = xgb.DMatrix(x)
     y_pred = model.predict(x)
@@ -449,6 +455,7 @@ def main():
                 args.complex_pdb, info[0], info[1], str(info[2]), info[3], pred, file=f
             )
         f.close()
+        print(f"Check outputs in file: '{args.output}'")
     else:
         f = open(args.output, "w")
         struct, warns_list, errors_list = check_pdb(
@@ -470,6 +477,7 @@ def main():
         )
         print(pred, file=f)
         f.close()
+        print(f"Check outputs in file: '{args.output}'")
 
 
 if __name__ == "__main__":
