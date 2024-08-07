@@ -202,9 +202,8 @@ def validate_mt_info(struct, chain, resid, wt, mt, window=(-5, 5)):
                 warns.append(
                     f"WARNING>> Missing some sequence neighbors 'chain {ch} and resid {resid}' of -5 positions"
                 )
-
         neigh_sel = struct.select(
-            f"(within 15 of ({wt_sel_str})) and name CA and not chain {ch}"
+            f"(within 15 of ({wt_sel_str})) and (name CA and not chain {ch})"
         )
         if not neigh_sel is None:
             for ci, ri, aa3 in zip(
