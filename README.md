@@ -29,6 +29,18 @@ conda install -c conda-forge numpy=1.26.0
 conda install -c conda-forge prody=2.4.0
 conda install -c conda-forge xgboost=1.7.6
 ```
+downgrade the pyparsing to 3.1.1 if higher version installed, as it leads to error
+in selection parsing using prody. One can use below command for it.
+```
+conda install -c conda-forge pyparsing==3.1.1
+```
+## Alternatively, create python environment from environment.yaml.
+Alternatively one can create the python enviroment `py311_saambe3d` from the 
+environment.yaml file using command:
+```
+conda env create --file=environment.yml
+```
+
 
 # Prediction Models
 The method provides two different models for predictions:
