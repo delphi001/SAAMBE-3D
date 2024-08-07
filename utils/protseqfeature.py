@@ -2,10 +2,10 @@
 # coding: utf-8
 
 
-import os
-import sys, getopt
+# import os
+# import sys
 import numpy as np
-import xgboost as xgb
+
 
 from collections import namedtuple
 from enum import Enum

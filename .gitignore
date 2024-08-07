@@ -1,5 +1,7 @@
 # Ignore output files
 *.out
+# Ignore swap files generated during code editing
+*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
